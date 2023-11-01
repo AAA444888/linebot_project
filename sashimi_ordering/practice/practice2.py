@@ -12,8 +12,13 @@ from practice1 import initial,verify
 from identify import identify
 # 需要額外載入對應的函示庫
 from linebot.models import PostbackAction,URIAction, MessageAction, TemplateSendMessage, ButtonsTemplate,ConfirmTemplate,CarouselTemplate,CarouselColumn
+def get_data():
+    with open('data.json','r') as f:
+        data = json.load(f)
+    return data 
 app = Flask(__name__)
-url = 'https://orderbot-4c7c5-default-rtdb.firebaseio.com'
+data = get_data()
+url = data['url']
 fdb = firebase.FirebaseApplication(url, None)
 user_ids=[]
 
@@ -23,8 +28,8 @@ def linebot():
     order={}
     try:
         json_data = json.loads(body)                         # json 格式化訊息內容
-        access_token = "855/Io+qJcb4ckjL6xUuLTZghraa8DcQoVWxf8d5pcnCWTN/gnvj6UyhNhT3zFUuCe9cA4jPTGTxD2lAVlkOJ5wQCRDpu0DJTyZ2AVid62sHndS8q93X4nNiGsNklWsmDSbvfnV0CombT/3atYFlsQdB04t89/1O/w1cDnyilFU="
-        secret = "1eec70f63262544199fc971730b20038"
+        access_token = data['access_token']
+        secret = data['secret']
         line_bot_api = LineBotApi(access_token)              # 確認 token 是否正確
         handler = WebhookHandler(secret)                     # 確認 secret 是否正確
         signature = request.headers['X-Line-Signature']      # 加入回傳的 headers

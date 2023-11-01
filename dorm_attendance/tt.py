@@ -14,9 +14,12 @@ from identify import identify
 from linebot.models import PostbackAction,URIAction, MessageAction, TemplateSendMessage, ButtonsTemplate,ConfirmTemplate,CarouselTemplate,CarouselColumn
 app = Flask(__name__)
 import json
-with open("data.json",'r') as f:
-    data = json.load(f)
-url = data['url']
+
+def get_data():
+    with open('data.json','r') as f:
+        data = json.load(f)
+    return  data
+url = get_data()['url']
 fdb = firebase.FirebaseApplication(url, None)
 user_ids=[]
 
@@ -24,6 +27,7 @@ user_ids=[]
 def linebot():
     body = request.get_data(as_text=True)                    # 取得收到的訊息內容
     try:
+        data = get_data()
         json_data = json.loads(body)                         # json 格式化訊息內容
         access_token = data["access_token"]
         secret = data['secret']
